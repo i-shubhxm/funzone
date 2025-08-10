@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spooky Disco Cat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+        :root {
+            --light-color-1: #ff00ff; /* Magenta */
+            --light-color-2: #00ffff; /* Cyan */
+            --light-color-3: #ffff00; /* Yellow */
+            --light-color-4: #ff007f; /* Rose */
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .spooky-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .spooky-icon {
+            position: absolute;
+            font-size: clamp(3rem, 10vw, 6rem);
+            opacity: 0.8;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            5% { opacity: 0.8; }
+            95% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            position: relative;
+            z-index: 10;
+            animation: colorShift 5s infinite linear;
+        }
+        
+        @keyframes colorShift {
+            0% { text-shadow: 2px 2px 5px var(--light-color-1), -2px -2px 5px var(--light-color-2); }
+            50% { text-shadow: 2px 2px 5px var(--light-color-2), -2px -2px 5px var(--light-color-3); }
+            100% { text-shadow: 2px 2px 5px var(--light-color-3), -2px -2px 5px var(--light-color-1); }
+        }
+
+        .cat-gif-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .cat-gif {
+            width: clamp(150px, 40vw, 300px);
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            border: 3px solid #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            animation: catBounce 1s infinite alternate;
+        }
+
+        @keyframes catBounce {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        p {
+            margin-top: 1rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Music button styling */
+        .music-controls {
+            margin-top: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .music-btn {
+            background-color: #333;
+            color: #fff;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--light-color-1);
+            transition: all 0.3s ease;
+        }
+
+        .music-btn:hover {
+            background-color: #555;
+            box-shadow: 0 0 25px var(--light-color-2);
+            transform: scale(1.1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="spooky-background"></div>
+
+    <h1>you bro whatsupp</h1>
+    <div class="cat-gif-container">
+        <img class="cat-gif" src="https://i.pinimg.com/originals/b3/90/96/b39096783a6c7efc820880674d072350.gif" alt="A cat dancing on a spooky background">
+    </div>
+    <p>This is the coolest cat in the afterlife, ready to party!</p>
+    
+    <!-- Audio controls -->
+    <div class="music-controls">
+        <audio id="disco-song" src="https://raw.githubusercontent.com/Anand-M-2001/Music/main/disco.mp3" loop></audio>
+        <button id="music-btn" class="music-btn"><i id="music-icon" class="fas fa-play"></i></button>
+    </div>
+
+    <script>
+        const spookyBackground = document.querySelector('.spooky-background');
+        const icons = ['fas fa-skull', 'fas fa-bone'];
+        const colors = ['#ff00ff', '#00ffff', '#ffff00', '#ff007f'];
+
+        function createSpookyIcon() {
+            const icon = document.createElement('i');
+            icon.className = icons[Math.floor(Math.random() * icons.length)] + ' spooky-icon';
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            icon.style.color = randomColor;
+            icon.style.textShadow = `0 0 10px ${randomColor}, 0 0 20px ${randomColor}`;
+            icon.style.left = Math.random() * 100 + 'vw';
+            icon.style.animationDuration = Math.random() * 10 + 10 + 's'; // 10s to 20s
+            spookyBackground.appendChild(icon);
+
+            // Remove the icon after it has finished its animation
+            icon.addEventListener('animationend', () => {
+                icon.remove();
+            });
+        }
+
+        setInterval(createSpookyIcon, 2000); // Create a new icon every 2s
+
+        // Music player logic
+        const audio = document.getElementById('disco-song');
+        const musicBtn = document.getElementById('music-btn');
+        const musicIcon = document.getElementById('music-icon');
+
+        // Play the music automatically when the window loads
+        window.addEventListener('load', () => {
+            audio.play().then(() => {
+                // Autoplay was successful
+                musicIcon.classList.remove('fa-play');
+                musicIcon.classList.add('fa-pause');
+            }).catch(error => {
+                // Autoplay was prevented
+                console.log("Autoplay was prevented. User must manually play the audio.");
+                musicIcon.classList.remove('fa-pause');
+                musicIcon.classList.add('fa-play');
+            });
+        });
+
+        musicBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                musicIcon.classList.remove('fa-play');
+                musicIcon.classList.add('fa-pause');
+            } else {
+                audio.pause();
+                musicIcon.classList.remove('fa-pause');
+                musicIcon.classList.add('fa-play');
+            }
+        });
+    </script>
+
+</body>
+</html>
